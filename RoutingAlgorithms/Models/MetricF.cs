@@ -28,7 +28,9 @@ namespace RoutingAlgorithms.Models
 
         public override readonly string ToString()
         {
-            return $"[{Delay:F1};{BandWidth:F1}]";
+            return $"[{BandWidth:F1};{Delay:F1}]";
+            //return $"[{Delay:F1};{BandWidth:F1}]";
+
         }
 
         public override readonly bool Equals(object obj)
@@ -43,9 +45,7 @@ namespace RoutingAlgorithms.Models
 
         public int CompareTo(MetricF other)
         {
-            // Только цену, так как дейкстра ищет по цене
-            return BandWidth.CompareTo(other.BandWidth);
-            //return (Time, Cost).CompareTo((other.Time, other.Cost));
+            return (Delay, BandWidth).CompareTo((other.Delay, other.BandWidth));
         }
 
         public bool Equals(MetricF other)

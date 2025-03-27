@@ -27,44 +27,85 @@ namespace RoutingAlgorithms.Helpers
 
             var nodeD = new Node("D", new(0.8f, 0.5f));
 
-            nodeS.Neighbors[nodeA] = new(1f, 2f);
-            nodeA.Neighbors[nodeS] = new(1f, 2f);
+            //nodeS.Neighbors[nodeA] = new(1f, 2f);
+            //nodeA.Neighbors[nodeS] = new(1f, 2f);
 
-            nodeS.Neighbors[nodeB] = new(3f, 1f);
-            nodeB.Neighbors[nodeS] = new(3f, 1f);
+            //nodeS.Neighbors[nodeB] = new(3f, 1f);
+            //nodeB.Neighbors[nodeS] = new(3f, 1f);
 
-            nodeS.Neighbors[nodeC] = new(1f, 8f);
-            nodeC.Neighbors[nodeS] = new(1f, 8f);
+            //nodeS.Neighbors[nodeC] = new(1f, 8f);
+            //nodeC.Neighbors[nodeS] = new(1f, 8f);
 
-            nodeA.Neighbors[nodeE] = new(10f, 6f);
-            nodeE.Neighbors[nodeA] = new(10f, 6f);
+            //nodeA.Neighbors[nodeE] = new(10f, 6f);
+            //nodeE.Neighbors[nodeA] = new(10f, 6f);
 
-            nodeA.Neighbors[nodeB] = new(1f, 3f);
-            nodeB.Neighbors[nodeA] = new(1f, 3f);
+            //nodeA.Neighbors[nodeB] = new(1f, 3f);
+            //nodeB.Neighbors[nodeA] = new(1f, 3f);
 
-            nodeB.Neighbors[nodeF] = new(8f, 4f);
-            nodeF.Neighbors[nodeB] = new(8f, 4f);
+            //nodeB.Neighbors[nodeF] = new(8f, 4f);
+            //nodeF.Neighbors[nodeB] = new(8f, 4f);
 
-            nodeB.Neighbors[nodeG] = new(5f, 12f);
-            nodeG.Neighbors[nodeB] = new(5f, 12f);
+            //nodeB.Neighbors[nodeG] = new(5f, 12f);
+            //nodeG.Neighbors[nodeB] = new(5f, 12f);
 
-            nodeB.Neighbors[nodeC] = new(1f, 2f);
-            nodeC.Neighbors[nodeB] = new(1f, 2f);
+            //nodeB.Neighbors[nodeC] = new(1f, 2f);
+            //nodeC.Neighbors[nodeB] = new(1f, 2f);
 
-            nodeC.Neighbors[nodeG] = new(3f, 2f);
-            nodeG.Neighbors[nodeC] = new(3f, 2f);
+            //nodeC.Neighbors[nodeG] = new(3f, 2f);
+            //nodeG.Neighbors[nodeC] = new(3f, 2f);
 
-            nodeE.Neighbors[nodeF] = new(3f, 1f);
-            nodeF.Neighbors[nodeE] = new(3f, 1f);
+            //nodeE.Neighbors[nodeF] = new(3f, 1f);
+            //nodeF.Neighbors[nodeE] = new(3f, 1f);
 
-            nodeF.Neighbors[nodeD] = new(5f, 2f);
-            nodeD.Neighbors[nodeF] = new(5f, 2f);
+            //nodeF.Neighbors[nodeD] = new(5f, 2f);
+            //nodeD.Neighbors[nodeF] = new(5f, 2f);
 
-            nodeE.Neighbors[nodeD] = new(5f, 4f);
-            nodeD.Neighbors[nodeE] = new(5f, 4f);
+            //nodeE.Neighbors[nodeD] = new(5f, 4f);
+            //nodeD.Neighbors[nodeE] = new(5f, 4f);
+
+            //nodeG.Neighbors[nodeD] = new(2f, 2f);
+            //nodeD.Neighbors[nodeG] = new(2f, 2f);
+
+
+            nodeS.Neighbors[nodeA] = new(2f, 1f);
+            nodeA.Neighbors[nodeS] = new(2f, 1f);
+
+            nodeS.Neighbors[nodeB] = new(1f, 3f);
+            nodeB.Neighbors[nodeS] = new(1f, 3f);
+
+            nodeS.Neighbors[nodeC] = new(8f, 1f);
+            nodeC.Neighbors[nodeS] = new(8f, 1f);
+
+            nodeA.Neighbors[nodeE] = new(6f, 10f);
+            nodeE.Neighbors[nodeA] = new(6f, 10f);
+
+            nodeA.Neighbors[nodeB] = new(3f, 1f);
+            nodeB.Neighbors[nodeA] = new(3f, 1f);
+
+            nodeB.Neighbors[nodeF] = new(4f, 8f);
+            nodeF.Neighbors[nodeB] = new(4f, 8f);
+
+            nodeB.Neighbors[nodeG] = new(12f, 5f);
+            nodeG.Neighbors[nodeB] = new(12f, 5f);
+
+            nodeB.Neighbors[nodeC] = new(2f, 1f);
+            nodeC.Neighbors[nodeB] = new(2f, 1f);
+
+            nodeC.Neighbors[nodeG] = new(2f, 3f);
+            nodeG.Neighbors[nodeC] = new(2f, 3f);
+
+            nodeE.Neighbors[nodeF] = new(1f, 3f);
+            nodeF.Neighbors[nodeE] = new(1f, 3f);
+
+            nodeF.Neighbors[nodeD] = new(2f, 5f);
+            nodeD.Neighbors[nodeF] = new(2f, 5f);
+
+            nodeE.Neighbors[nodeD] = new(4f, 5f);
+            nodeD.Neighbors[nodeE] = new(4f, 5f);
 
             nodeG.Neighbors[nodeD] = new(2f, 2f);
             nodeD.Neighbors[nodeG] = new(2f, 2f);
+
 
             return [nodeS, nodeA, nodeB, nodeC, nodeE, nodeF, nodeG, nodeD];
 

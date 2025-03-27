@@ -41,8 +41,8 @@ namespace GraphViewer
             TryToFindPath();
             RenderImage(_graph, _pathFindingResults);
         }
-        public int BandwidthLimit { get; set; } = 11;
-        public int DelayLimit { get; set; } = 8;
+        public int BandwidthLimit { get; set; } = 8;
+        public int DelayLimit { get; set; } = 11;
         public (Node start, Node end)? HoveredEdge
         {
             get => _hoveredEdge;
@@ -227,9 +227,9 @@ namespace GraphViewer
 
         private int _currentWidth = 0;
         private int _currentHeight = 0;
+        private Form _helloFormInstanse { get; init; }
 #if DEBUG
         private Stopwatch _stopwatch = new();
-        private Form _helloFormInstanse { get; init; }
 #endif
         private void RenderImage(IList<Node> nodes, IList<PathFindingResult> routes, [CallerMemberName] string methodName = "")
         {
@@ -327,12 +327,13 @@ namespace GraphViewer
                 var font = new SKFont(typeface, fontSize);
 
 
-                const int maxAlgorithmNameLength = 1;
+                const int firstColumnWidth = 50;
 
                 string algorithmName = _routingMethodName[route.RoutingMethod];
-                string formattedText = $"{algorithmName,-maxAlgorithmNameLength}  Пропускная способность: {route.TotalBandwidth:F4}  Задержка: {route.TotalDelay:F4}";
+                string paddedAlgorithmName = algorithmName.PadRight(firstColumnWidth - algorithmName.Length,' ');
+                string formattedText = $"{paddedAlgorithmName} Пропускная способность: {route.Path.SelectMany(s => s.Neighbors.Values).MinBy(s => s.BandWidth).BandWidth:F4} Задержка: {route.TotalDelay:F4}";
 
-                canvas.DrawText(formattedText, 0, (int)route.RoutingMethod * fontSize, SKTextAlign.Left, font, paint);
+                canvas.DrawText(formattedText, 5, (int)route.RoutingMethod * fontSize, SKTextAlign.Left, font, paint);
             }
             edgeCount.Clear();
         }

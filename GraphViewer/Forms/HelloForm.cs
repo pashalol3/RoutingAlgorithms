@@ -1,35 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace GraphViewer.Forms
+﻿namespace GraphViewer.Forms
 {
-    public partial class HelloForm: Form
+    public partial class HelloForm : Form
     {
+        private const string IMAGE_PATH = "image.jpg";
         public HelloForm()
         {
             InitializeComponent();
 
-            this.bStart.Click += BStart_Click;
-            this.bExit.Click += BExit_Click;
-        }
-
-        private void BExit_Click(object? sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void BStart_Click(object? sender, EventArgs e)
-        {
-            var mainForm = new MainForm(this);
-            mainForm.Show();
-            this.Hide();
+            this.bStart.Click += (s, e) =>
+            {
+                new MainForm(this).Show();
+                this.Hide();
+            };
+            this.Load += (s, e) => pImage.Image = File.Exists(IMAGE_PATH) ? Image.FromFile(IMAGE_PATH) : Properties.Resources.image;
+            this.bExit.Click += (s, e) => Application.Exit();
         }
     }
 }

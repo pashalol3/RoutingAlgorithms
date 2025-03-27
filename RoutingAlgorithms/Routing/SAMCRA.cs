@@ -29,7 +29,7 @@ namespace RoutingAlgorithms.Routing
                 initialState,
                 CalculatePriority(initialState, routeMaxBandwidth, routeMaxDelay)
             );
-            nodeStates[source] = new List<PathState> { initialState };
+            nodeStates[source] = [initialState];
 
             while (queue.Count > 0)
             {
@@ -43,7 +43,7 @@ namespace RoutingAlgorithms.Routing
                         currentState.Path,
                         currentState.TotalBandwidth,
                         currentState.TotalDelay,
-                        Routing.RoutingMethod.SAMCRA
+                        RoutingMethod.SAMCRA
                     );
                 }
 
@@ -71,7 +71,7 @@ namespace RoutingAlgorithms.Routing
                     // Добавление нового состояния
                     if (!nodeStates.TryGetValue(neighbor, out var states))
                     {
-                        states = new List<PathState>();
+                        states = [];
                         nodeStates[neighbor] = states;
                     }
                     states.Add(newState);
@@ -98,8 +98,8 @@ namespace RoutingAlgorithms.Routing
             PathState newState,
             Dictionary<Node, List<PathState>> nodeStates,
             Node targetNode,
-            float maxCost,
-            float maxTime
+            float maxBandwidth,
+            float maxDelay
         )
         {
             if (!nodeStates.TryGetValue(targetNode, out var existingStates))
@@ -109,35 +109,25 @@ namespace RoutingAlgorithms.Routing
             foreach (var existingState in existingStates)
             {
                 // Проверка полного доминирования
-                if (
-                    existingState.TotalBandwidth <= newState.TotalBandwidth
-                    && existingState.TotalDelay <= newState.TotalDelay
-                )
-                {
+                if (existingState.TotalBandwidth <= newState.TotalBandwidth && existingState.TotalDelay <= newState.TotalDelay)
                     return true;
-                }
 
                 // Проверка частичного доминирования через приоритет
-                var existingPriority = CalculatePriority(existingState, maxCost, maxTime);
-                var newPriority = CalculatePriority(newState, maxCost, maxTime);
+                var existingPriority = CalculatePriority(existingState, maxBandwidth, maxDelay);
+                var newPriority = CalculatePriority(newState, maxBandwidth, maxDelay);
 
-                if (
-                    existingPriority <= newPriority
-                    && existingState.TotalBandwidth <= newState.TotalBandwidth
-                    && existingState.TotalDelay <= newState.TotalDelay
-                )
-                {
+                if (existingPriority <= newPriority && existingState.TotalBandwidth <= newState.TotalBandwidth && existingState.TotalDelay <= newState.TotalDelay)
                     return true;
-                }
+
             }
             return false;
         }
 
         private class PathState(List<Node> path, float totalCost, float totalTime)
         {
-            public List<Node> Path { get; } = path;
-            public float TotalBandwidth { get; } = totalCost;
-            public float TotalDelay { get; } = totalTime;
+            public List<Node> Path { get; init; } = path;
+            public float TotalBandwidth { get; init; } = totalCost;
+            public float TotalDelay { get; init; } = totalTime;
         }
     }
 }
