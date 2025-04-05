@@ -86,37 +86,20 @@ namespace RoutingAlgorithms.Helpers
 
         }
 
-        public static List<Node> GenerateGraphMatrix(int[,] matrix)
+        public static List<Node> GenerateGraphMatrix(int[,] matrix , bool isDistributeCoords = true)
         {
             var width = matrix.GetLength(0);
             var height = matrix.GetLength(1);
             if (width != height)
                 throw new ArgumentOutOfRangeException($"The {nameof(matrix)} should be square");
-
-            var nodeStartName = 'A';
-            var nodeNames = Enumerable.Range(0, width)
-                                     .Select(s => (char)(nodeStartName + s))
-                                     .ToArray();
-            List<Node> nodes = [];
-
-            int numPairs = (width + 1) / 2; // Округляем вверх, чтобы учесть нечётные случаи
-
-            for (int i = 0; i < width; i++)
-            {
-                int pairIndex = i / 2;
-                bool isTopNode = (i % 2) == 0;
-                float x = (pairIndex + 0.5f) / numPairs;
-                float y = isTopNode ? 0.75f : 0.25f;
-
-                // Ограничиваем координаты в пределах [0, 1]
-                x = Math.Clamp(x, 0f, 1f);
-                y = Math.Clamp(y, 0f, 1f);
-
-                nodes.Add(new Node(
-                    nodeNames[i].ToString(),
-                    new PointF(x, y)));
-            }
-
+            List<Node> nodes = Enumerable.Range(0, width)
+                .Select(i => new Node(
+                    ((char)('A' + i)).ToString(),
+                    new(StaticRandom.FloatNMaxMin(0.2f, 0.8f),
+                        StaticRandom.FloatNMaxMin(0.2f, 0.8f))))
+                .ToList();
+            if (isDistributeCoords)
+                DistributeCoordinates(nodes);
 
             for (int i = 0; i < width; i++)
             {
@@ -135,7 +118,24 @@ namespace RoutingAlgorithms.Helpers
             return nodes;
         }
 
+        public static List<Node> DistributeCoordinates(List<Node> nodes)
+        {
+            int numPairs = (nodes.Count + 1) / 2; // Округляем вверх, чтобы учесть нечётные случаи
 
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                int pairIndex = i / 2;
+                bool isTopNode = (i % 2) == 0;
+                float x = (pairIndex + 0.5f) / numPairs;
+                float y = isTopNode ? 0.75f : 0.25f;
+
+                x = Math.Clamp(x, 0f, 1f);
+                y = Math.Clamp(y, 0f, 1f);
+
+                nodes[i].PositionN = new PointF(x, y);
+            }
+            return nodes;
+        }
 
         public static List<Node> Graph5()
         {

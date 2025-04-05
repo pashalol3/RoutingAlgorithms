@@ -64,6 +64,8 @@ namespace GraphViewer
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 var matrix = dialog.Matrix;
+                var graph = GraphGenerator.GenerateGraphMatrix(matrix, false);
+                _graphControl.Nodes = graph;
 
             }
         }
