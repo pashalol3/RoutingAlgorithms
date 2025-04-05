@@ -19,7 +19,7 @@ internal class Program
         var maxTime = float.Parse(args[3], System.Globalization.NumberStyles.Float);
 #endif
         //var nodes = GraphGenerator.RandomTree(numNodes: 9, connectionProbability: 0.4f);
-        var nodes = GraphGenerator.StaticGraph();
+        var nodes = GraphGenerator.MainGraph();
         var source = nodes.First();
         var dest = nodes.Last();
 

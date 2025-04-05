@@ -27,5 +27,13 @@ namespace RoutingAlgorithms.Helpers
             get => _gloablRandom.Next(int.MinValue, int.MaxValue);
         }
         public static int MaxInteger(int max) => _gloablRandom.Next(0, max);
+        public static float FloatNMaxMin(float min , float max)
+        {
+            if (min >= max)
+            {
+                throw new ArgumentException("min must be less than max");
+            }
+            return (_gloablRandom.NextSingle() * (max - min) + min);
+        }
     }
 }

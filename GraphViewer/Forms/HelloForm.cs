@@ -2,7 +2,10 @@
 {
     public partial class HelloForm : Form
     {
-        private const string IMAGE_PATH = "image.jpg";
+        private const string IMAGE_FOLDER = "assets";
+        private const string IMAGE_NAME = "1";
+        private readonly string[] IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png"];
+
         public HelloForm()
         {
             InitializeComponent();
@@ -12,7 +15,28 @@
                 new MainForm(this).Show();
                 this.Hide();
             };
-            this.Load += (s, e) => pImage.Image = File.Exists(IMAGE_PATH) ? Image.FromFile(IMAGE_PATH) : Properties.Resources.image;
+            this.bInfo.Click += (s, e) => 
+            {
+                new ReferenceForm(this).Show();
+                this.Hide();
+            };
+            this.Load += (s, e) =>
+            {
+                string? imagePath = null;
+
+                foreach (var extension in IMAGE_EXTENSIONS)
+                {
+                    string potentialPath = Path.Combine(IMAGE_FOLDER, IMAGE_NAME + extension);
+                    if (File.Exists(potentialPath))
+                    {
+                        imagePath = potentialPath;
+                        break;
+                    }
+                }
+
+                pbImage.Image = imagePath != null ? Image.FromFile(imagePath) : Properties.Resources.image;
+            };
+
             this.bExit.Click += (s, e) => Application.Exit();
         }
     }

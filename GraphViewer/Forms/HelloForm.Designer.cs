@@ -31,12 +31,13 @@
             bStart = new Button();
             bExit = new Button();
             bInfo = new Button();
-            pImage = new PictureBox();
-            ((System.ComponentModel.ISupportInitialize)pImage).BeginInit();
+            pbImage = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pbImage).BeginInit();
             SuspendLayout();
             // 
             // bStart
             // 
+            bStart.Anchor = AnchorStyles.Bottom;
             bStart.Font = new Font("Times New Roman", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             bStart.Location = new Point(244, 493);
             bStart.Name = "bStart";
@@ -47,6 +48,7 @@
             // 
             // bExit
             // 
+            bExit.Anchor = AnchorStyles.Bottom;
             bExit.Font = new Font("Times New Roman", 14.25F);
             bExit.Location = new Point(350, 493);
             bExit.Name = "bExit";
@@ -57,6 +59,7 @@
             // 
             // bInfo
             // 
+            bInfo.Anchor = AnchorStyles.Bottom;
             bInfo.Font = new Font("Times New Roman", 14.25F);
             bInfo.Location = new Point(456, 493);
             bInfo.Name = "bInfo";
@@ -65,15 +68,15 @@
             bInfo.Text = "Справка";
             bInfo.UseVisualStyleBackColor = true;
             // 
-            // pImage
+            // pbImage
             // 
-            pImage.Dock = DockStyle.Fill;
-            pImage.Location = new Point(0, 0);
-            pImage.Name = "pImage";
-            pImage.Size = new Size(784, 561);
-            pImage.SizeMode = PictureBoxSizeMode.StretchImage;
-            pImage.TabIndex = 3;
-            pImage.TabStop = false;
+            pbImage.Dock = DockStyle.Fill;
+            pbImage.Location = new Point(0, 0);
+            pbImage.Name = "pbImage";
+            pbImage.Size = new Size(784, 561);
+            pbImage.SizeMode = PictureBoxSizeMode.StretchImage;
+            pbImage.TabIndex = 3;
+            pbImage.TabStop = false;
             // 
             // HelloForm
             // 
@@ -83,12 +86,9 @@
             Controls.Add(bInfo);
             Controls.Add(bExit);
             Controls.Add(bStart);
-            Controls.Add(pImage);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            MaximizeBox = false;
-            MinimizeBox = false;
+            Controls.Add(pbImage);
             Name = "HelloForm";
-            ((System.ComponentModel.ISupportInitialize)pImage).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pbImage).EndInit();
             ResumeLayout(false);
         }
 
@@ -97,6 +97,6 @@
         private Button bStart;
         private Button bExit;
         private Button bInfo;
-        private PictureBox pImage;
+        private PictureBox pbImage;
     }
 }

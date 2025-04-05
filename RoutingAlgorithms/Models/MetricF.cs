@@ -16,7 +16,8 @@ namespace RoutingAlgorithms.Models
     {
         public static MetricF One => new(1f, 1f);
         public static MetricF Zero => new(0f, 0f);
-        public static MetricF Random => new(StaticRandom.FloatN, StaticRandom.FloatN);
+        public static MetricF RandomN => new(StaticRandom.FloatN, StaticRandom.FloatN);
+        public static MetricF Random => new(StaticRandom.FloatN * 10f, StaticRandom.FloatN * 10f);
         public MetricF(float delay, float bandwidth)
         {
             Delay = delay;
@@ -28,8 +29,14 @@ namespace RoutingAlgorithms.Models
 
         public override readonly string ToString()
         {
-            return $"[{BandWidth:F1};{Delay:F1}]";
-            //return $"[{Delay:F1};{BandWidth:F1}]";
+            if (false)
+            {
+                return $"[{Delay:F1};{BandWidth:F1}]";
+            }
+            else
+            {
+                return $"[{BandWidth:F1};{Delay:F1}]";
+            }
 
         }
 

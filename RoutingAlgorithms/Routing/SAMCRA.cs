@@ -88,10 +88,10 @@ namespace RoutingAlgorithms.Routing
             return PathFindingResult.Empty;
         }
 
-        private static float CalculatePriority(PathState state, float maxCost, float maxTime)
+        private static float CalculatePriority(PathState state, float maxBandwidth, float maxTime)
         {
             // Приоритет - максимальная нормализованная метрика
-            return System.Math.Max(state.TotalBandwidth / maxCost, state.TotalDelay / maxTime);
+            return MathF.Max(state.TotalBandwidth / maxBandwidth , state.TotalDelay / maxTime);
         }
 
         private static bool IsDominated(
@@ -109,14 +109,17 @@ namespace RoutingAlgorithms.Routing
             foreach (var existingState in existingStates)
             {
                 // Проверка полного доминирования
-                if (existingState.TotalBandwidth <= newState.TotalBandwidth && existingState.TotalDelay <= newState.TotalDelay)
+                if (existingState.TotalBandwidth <= newState.TotalBandwidth &&
+                    existingState.TotalDelay <= newState.TotalDelay)
                     return true;
 
                 // Проверка частичного доминирования через приоритет
                 var existingPriority = CalculatePriority(existingState, maxBandwidth, maxDelay);
                 var newPriority = CalculatePriority(newState, maxBandwidth, maxDelay);
 
-                if (existingPriority <= newPriority && existingState.TotalBandwidth <= newState.TotalBandwidth && existingState.TotalDelay <= newState.TotalDelay)
+                if (existingPriority <= newPriority &&
+                    existingState.TotalBandwidth <= newState.TotalBandwidth &&
+                    existingState.TotalDelay <= newState.TotalDelay)
                     return true;
 
             }

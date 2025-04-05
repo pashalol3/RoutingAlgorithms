@@ -1,7 +1,10 @@
 ﻿using RoutingAlgorithms.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Numerics;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +16,7 @@ namespace RoutingAlgorithms.Helpers
         /// Граф с рисунка
         /// </summary>
         /// <returns></returns>
-        public static List<Node> StaticGraph()
+        public static List<Node> MainGraph()
         {
             var nodeS = new Node("S", new(0.2f, 0.5f));
 
@@ -26,45 +29,6 @@ namespace RoutingAlgorithms.Helpers
             var nodeG = new Node("G", new(0.6f, 0.8f));
 
             var nodeD = new Node("D", new(0.8f, 0.5f));
-
-            //nodeS.Neighbors[nodeA] = new(1f, 2f);
-            //nodeA.Neighbors[nodeS] = new(1f, 2f);
-
-            //nodeS.Neighbors[nodeB] = new(3f, 1f);
-            //nodeB.Neighbors[nodeS] = new(3f, 1f);
-
-            //nodeS.Neighbors[nodeC] = new(1f, 8f);
-            //nodeC.Neighbors[nodeS] = new(1f, 8f);
-
-            //nodeA.Neighbors[nodeE] = new(10f, 6f);
-            //nodeE.Neighbors[nodeA] = new(10f, 6f);
-
-            //nodeA.Neighbors[nodeB] = new(1f, 3f);
-            //nodeB.Neighbors[nodeA] = new(1f, 3f);
-
-            //nodeB.Neighbors[nodeF] = new(8f, 4f);
-            //nodeF.Neighbors[nodeB] = new(8f, 4f);
-
-            //nodeB.Neighbors[nodeG] = new(5f, 12f);
-            //nodeG.Neighbors[nodeB] = new(5f, 12f);
-
-            //nodeB.Neighbors[nodeC] = new(1f, 2f);
-            //nodeC.Neighbors[nodeB] = new(1f, 2f);
-
-            //nodeC.Neighbors[nodeG] = new(3f, 2f);
-            //nodeG.Neighbors[nodeC] = new(3f, 2f);
-
-            //nodeE.Neighbors[nodeF] = new(3f, 1f);
-            //nodeF.Neighbors[nodeE] = new(3f, 1f);
-
-            //nodeF.Neighbors[nodeD] = new(5f, 2f);
-            //nodeD.Neighbors[nodeF] = new(5f, 2f);
-
-            //nodeE.Neighbors[nodeD] = new(5f, 4f);
-            //nodeD.Neighbors[nodeE] = new(5f, 4f);
-
-            //nodeG.Neighbors[nodeD] = new(2f, 2f);
-            //nodeD.Neighbors[nodeG] = new(2f, 2f);
 
 
             nodeS.Neighbors[nodeA] = new(2f, 1f);
@@ -106,10 +70,150 @@ namespace RoutingAlgorithms.Helpers
             nodeG.Neighbors[nodeD] = new(2f, 2f);
             nodeD.Neighbors[nodeG] = new(2f, 2f);
 
-
             return [nodeS, nodeA, nodeB, nodeC, nodeE, nodeF, nodeG, nodeD];
+        }
+
+        public static List<Node> Graph4()
+        {
+            var adjacencyMatrix = new int[,]
+            {
+                {0,1,1,0},
+                {1,0,1,1},
+                {1,1,0,1},
+                {0,1,1,0},
+            };
+            return GenerateGraphMatrix(adjacencyMatrix);
 
         }
+
+        public static List<Node> GenerateGraphMatrix(int[,] matrix)
+        {
+            var width = matrix.GetLength(0);
+            var height = matrix.GetLength(1);
+            if (width != height)
+                throw new ArgumentOutOfRangeException($"The {nameof(matrix)} should be square");
+
+            var nodeStartName = 'A';
+            var nodeNames = Enumerable.Range(0, width)
+                                     .Select(s => (char)(nodeStartName + s))
+                                     .ToArray();
+            List<Node> nodes = [];
+
+            int numPairs = (width + 1) / 2; // Округляем вверх, чтобы учесть нечётные случаи
+
+            for (int i = 0; i < width; i++)
+            {
+                int pairIndex = i / 2;
+                bool isTopNode = (i % 2) == 0;
+                float x = (pairIndex + 0.5f) / numPairs;
+                float y = isTopNode ? 0.75f : 0.25f;
+
+                // Ограничиваем координаты в пределах [0, 1]
+                x = Math.Clamp(x, 0f, 1f);
+                y = Math.Clamp(y, 0f, 1f);
+
+                nodes.Add(new Node(
+                    nodeNames[i].ToString(),
+                    new PointF(x, y)));
+            }
+
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = i + 1; j < width; j++) // Начинаем с j = i + 1
+                {
+                    if (matrix[i, j] == 1)
+                    {
+                        // Генерируем метрику ОДИН раз для обоих направлений
+                        var metric = MetricF.Random;
+                        nodes[i].Neighbors[nodes[j]] = metric;
+                        nodes[j].Neighbors[nodes[i]] = metric;
+                    }
+                }
+            }
+
+            return nodes;
+        }
+
+
+
+        public static List<Node> Graph5()
+        {
+            var adjacencyMatrix = new int[,]
+            {
+                {0, 1, 1, 0, 0},
+                {1, 0, 1, 0, 1},
+                {1, 1, 0, 1, 1},
+                {0, 0, 1, 0, 1},
+                {0, 1, 1, 1, 0}
+            };
+
+            return GenerateGraphMatrix(adjacencyMatrix);
+        }
+        public static List<Node> Graph6()
+        {
+            var adjacencyMatrix = new int[,]
+            {
+                {0, 1, 1, 0, 0, 0},
+                {1, 0, 1, 1, 1, 0},
+                {1, 1, 0, 0, 1, 0},
+                {0, 1, 0, 0, 0, 1},
+                {0, 1, 1, 0, 0, 1},
+                {0, 0, 0, 1, 1, 0}
+            };
+
+            return GenerateGraphMatrix(adjacencyMatrix);
+        }
+        public static List<Node> Graph7()
+        {
+            var adjacencyMatrix = new int[,]
+            {
+                {0, 1, 1, 0, 0, 0, 0},
+                {1, 0, 0, 1, 0, 0, 0},
+                {1, 0, 0, 1, 1, 0, 0},
+                {0, 1, 1, 0, 0, 1, 0},
+                {0, 0, 1, 0, 0, 1, 1},
+                {0, 0, 0, 1, 1, 0, 1},
+                {0, 0, 0, 0, 1, 1, 0}
+            };
+
+            return GenerateGraphMatrix(adjacencyMatrix);
+        }
+        public static List<Node> Graph8()
+        {
+            var adjacencyMatrix = new int[,]
+            {
+                {0,1,1,0,0,0,0,0},
+                {1,0,1,1,0,0,0,0},
+                {1,1,0,0,1,0,0,0},
+                {0,1,0,0,0,1,0,0},
+                {0,0,1,0,0,1,1,0},
+                {0,0,0,1,1,0,1,1},
+                {0,0,0,0,1,1,0,1},
+                {0,0,0,0,0,1,1,0 }
+            };
+
+            return GenerateGraphMatrix(adjacencyMatrix);
+        }
+        public static List<Node> Graph9()
+        {
+            var adjacencyMatrix = new int[,]
+            {
+                {0,1,1,0,0,0,0,0,0},
+                {1,0,1,1,0,0,0,0,0},
+                {1,1,0,1,1,0,0,0,0},
+                {0,1,1,0,1,1,0,0,0},
+                {0,0,1,1,0,1,1,0,0},
+                {0,0,0,1,1,0,1,1,0},
+                {0,0,0,0,1,1,0,1,1},
+                {0,0,0,0,0,1,1,0,1},
+                {0,0,0,0,0,0,1,1,0}
+            };
+
+            return GenerateGraphMatrix(adjacencyMatrix);
+        }
+
+
         /// <summary>
         /// Генерирует рандомный граф, каждый узел которого связан (нет висячих узлов)
         /// </summary>
@@ -128,7 +232,7 @@ namespace RoutingAlgorithms.Helpers
             for (int i = 1; i < numNodes; i++)
             {
                 int parentIndex = StaticRandom.MaxInteger(i);
-                var metric = MetricF.Random;
+                var metric = MetricF.RandomN;
                 nodes[i].Neighbors[nodes[parentIndex]] = metric;
                 nodes[parentIndex].Neighbors[nodes[i]] = metric;
             }
@@ -139,7 +243,7 @@ namespace RoutingAlgorithms.Helpers
                 {
                     if (StaticRandom.FloatN < connectionProbability)
                     {
-                        var metric = MetricF.Random;
+                        var metric = MetricF.RandomN;
                         nodes[i].Neighbors[nodes[j]] = metric;
                         nodes[j].Neighbors[nodes[i]] = metric;
                     }
@@ -169,7 +273,7 @@ namespace RoutingAlgorithms.Helpers
                 {
                     if (StaticRandom.FloatN < connectionProbability)
                     {
-                        var metric = MetricF.Random;
+                        var metric = MetricF.RandomN;
                         nodes[i].Neighbors[nodes[j]] = metric;
                         nodes[j].Neighbors[nodes[i]] = metric;
                     }

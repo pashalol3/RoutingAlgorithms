@@ -1,5 +1,5 @@
 ﻿using RoutingAlgorithms.Helpers;
-using SkiaSharp;
+using System.Drawing;
 
 namespace RoutingAlgorithms.Models
 {
@@ -9,23 +9,11 @@ namespace RoutingAlgorithms.Models
     public class Node : IEquatable<Node>
     {
         public NodeStatus Status { get; set; } = NodeStatus.Default;
-        public SKColor NodeColor
-        {
-            get => _nodeColors[Status];
-        }
         public string NodeName { get; init; }
-        public SKPoint PositionN { get; init; }
+        public PointF PositionN { get; set; }
         public Dictionary<Node, MetricF> Neighbors { get; set; } = [];
 
-        private readonly Dictionary<NodeStatus, SKColor> _nodeColors = new()
-        {
-            {NodeStatus.Start, SKColors.Green},
-            {NodeStatus.Destination, SKColors.Blue},
-            {NodeStatus.Hovered, SKColors.Red},
-            {NodeStatus.Default, new(235, 150, 50) }
-        };
-
-        public Node(string? letter = null, SKPoint? pos = null)
+        public Node(string? letter = null, PointF? pos = null)
         {
             NodeName = string.IsNullOrEmpty(letter) ? Counter.Next.ToString() : letter;
             PositionN = pos is null ? new(StaticRandom.Float, StaticRandom.Float) : pos.Value;
