@@ -26,8 +26,8 @@ namespace GraphViewer.Forms
         private void InitializeComponents()
         {
             _matrixControl = new AdjacencyMatrixControl();
-            _btnOk = new Button { Text = "OK", DialogResult = DialogResult.OK, Size = new Size(80, 30) };
-            _btnCancel = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, Size = new Size(80, 30) };
+            _btnOk = new Button { Text = "ОК", DialogResult = DialogResult.OK, Size = new Size(80, 30) };
+            _btnCancel = new Button { Text = "Отмена", DialogResult = DialogResult.Cancel, Size = new Size(80, 30) };
 
             var tableLayout = new TableLayoutPanel
             {

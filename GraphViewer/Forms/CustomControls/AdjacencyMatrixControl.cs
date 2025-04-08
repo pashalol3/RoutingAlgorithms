@@ -8,8 +8,8 @@ namespace GraphViewer.Forms.CustomControls
 {
     public class AdjacencyMatrixControl : UserControl
     {
-        private NumericUpDown nudSize;
-        private DataGridView dgvMatrix;
+        private NumericUpDown? _nudSize;
+        private DataGridView? _dgvMatrix;
 
         public AdjacencyMatrixControl()
         {
@@ -18,19 +18,17 @@ namespace GraphViewer.Forms.CustomControls
 
         private void InitializeComponents()
         {
-            // Настройка NumericUpDown
-            nudSize = new NumericUpDown
+            _nudSize = new NumericUpDown
             {
                 Minimum = 1,
-                Maximum = 10,
+                Maximum = 26,
                 Value = 1,
                 Location = new Point(10, 10),
                 Width = 60
             };
-            nudSize.ValueChanged += (s, e) => GenerateMatrix();
+            _nudSize.ValueChanged += (s, e) => GenerateMatrix();
 
-            // Настройка DataGridView
-            dgvMatrix = new DataGridView
+            _dgvMatrix = new DataGridView
             {
                 AllowUserToAddRows = false,
                 AllowUserToDeleteRows = false,
@@ -43,27 +41,32 @@ namespace GraphViewer.Forms.CustomControls
                 ReadOnly = true,
                 ScrollBars = ScrollBars.None,
                 SelectionMode = DataGridViewSelectionMode.CellSelect,
-                BackgroundColor = SystemColors.Window
-            };
-            dgvMatrix.CellClick += DgvMatrix_CellClick;
+                BackgroundColor = SystemColors.Window,
 
-            Controls.Add(nudSize);
-            Controls.Add(dgvMatrix);
+            };
+            _dgvMatrix.DefaultCellStyle.SelectionBackColor = SystemColors.Window; 
+            _dgvMatrix.DefaultCellStyle.SelectionForeColor = SystemColors.ControlText;
+
+            _dgvMatrix.CellClick += DgvMatrix_CellClick;
+
+            Controls.Add(_nudSize);
+            Controls.Add(_dgvMatrix);
             GenerateMatrix();
         }
 
         private void GenerateMatrix()
         {
+            if (_dgvMatrix is null) throw new Exception($"{nameof(_dgvMatrix)} is null");
+            if (_nudSize is null) throw new Exception($"{nameof(_nudSize)} is null");
+
             this.SuspendLayout();
+            int size = (int)_nudSize.Value;
+            _dgvMatrix.Columns.Clear();
+            _dgvMatrix.Rows.Clear();
 
-            int size = (int)nudSize.Value;
-            dgvMatrix.Columns.Clear();
-            dgvMatrix.Rows.Clear();
-
-            // Создание столбцов
             for (int i = 0; i < size; i++)
             {
-                dgvMatrix.Columns.Add(new DataGridViewTextBoxColumn
+                _dgvMatrix.Columns.Add(new DataGridViewTextBoxColumn
                 {
                     HeaderText = ((char)('A' + i)).ToString(),
                     Width = 30,
@@ -76,51 +79,63 @@ namespace GraphViewer.Forms.CustomControls
                 });
             }
 
-            // Создание строк
+            _dgvMatrix.RowHeadersWidth = 50;
+
             for (int i = 0; i < size; i++)
             {
-                dgvMatrix.Rows.Add();
-                dgvMatrix.Rows[i].HeaderCell.Value = ((char)('A' + i)).ToString();
-                dgvMatrix.Rows[i].Height = 30;
+                _dgvMatrix.Rows.Add();
+                _dgvMatrix.Rows[i].HeaderCell.Value = ((char)('A' + i)).ToString();
+                _dgvMatrix.Rows[i].Height = 30;
+
+                var diagonalCell = _dgvMatrix.Rows[i].Cells[i];
+                diagonalCell.Value = "-";
+                diagonalCell.ReadOnly = true; 
             }
 
-            // Расчет размеров
-            int headerWidth = dgvMatrix.RowHeadersWidth + 2;
-            int headerHeight = dgvMatrix.ColumnHeadersHeight + 2;
+            int headerWidth = _dgvMatrix.RowHeadersWidth + 2;
+            int headerHeight = _dgvMatrix.ColumnHeadersHeight + 2;
 
-            dgvMatrix.Width = size * 30 + headerWidth;
-            dgvMatrix.Height = size * 30 + headerHeight;
+            _dgvMatrix.Width = size * 30 + headerWidth;
+            _dgvMatrix.Height = size * 30 + headerHeight;
 
-            // Обновление размеров контрола
             this.Size = new Size(
-                Math.Max(dgvMatrix.Right + 10, nudSize.Right + 10),
-                dgvMatrix.Bottom + 10
+                Math.Max(_dgvMatrix.Right + 10, _nudSize.Right + 10),
+                _dgvMatrix.Bottom + 10
             );
 
             this.ResumeLayout();
         }
 
+
+
         private void DgvMatrix_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
+            if (_dgvMatrix is null) throw new Exception($"{nameof(_dgvMatrix)} is null");
+            if (_nudSize is null) throw new Exception($"{nameof(_nudSize)} is null");
+
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (e.RowIndex == e.ColumnIndex) return;
+            if (e.RowIndex == e.ColumnIndex) return; 
 
-            var cell = dgvMatrix.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            cell.Value = cell.Value?.ToString() == "1" ? null : "1"; 
+            var cell = _dgvMatrix.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            cell.Value = cell.Value?.ToString() == "1" ? null : "1";
 
-            dgvMatrix.Rows[e.ColumnIndex].Cells[e.RowIndex].Value = cell.Value;
+            _dgvMatrix.Rows[e.ColumnIndex].Cells[e.RowIndex].Value = cell.Value;
         }
+
 
         public int[,] GetMatrix()
         {
-            int size = (int)nudSize.Value;
+            if (_dgvMatrix is null) throw new Exception($"{nameof(_dgvMatrix)} is null");
+            if (_nudSize is null) throw new Exception($"{nameof(_nudSize)} is null");
+
+            int size = (int)_nudSize.Value;
             int[,] matrix = new int[size, size];
 
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    var value = dgvMatrix.Rows[i].Cells[j].Value;
+                    var value = _dgvMatrix.Rows[i].Cells[j].Value;
                     matrix[i, j] = value != null && value.ToString() == "1" ? 1 : 0;
                 }
             }

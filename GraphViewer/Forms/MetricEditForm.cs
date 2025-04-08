@@ -7,14 +7,14 @@ namespace GraphViewer.Forms
 {
     public class MetricEditForm : Form
     {
-        private NumericUpDown txtDelay;
-        private NumericUpDown txtBandWidth;
+        private readonly NumericUpDown _txtDelay;
+        private readonly NumericUpDown _txtBandWidth;
 
         public MetricF Metric { get; private set; }
 
         public MetricEditForm(MetricF initialMetric)
         {
-            this.Size = new Size(300, 150);
+            this.Size = new Size(350, 150);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.StartPosition = FormStartPosition.CenterParent;
             this.MaximizeBox = false;
@@ -24,11 +24,11 @@ namespace GraphViewer.Forms
             {
                 Text = "Задержка:",
                 Left = 20,
-                Top = 20
+                Top = 50
             };
-            txtDelay = new NumericUpDown
+            _txtDelay = new NumericUpDown
             {
-                Left = 120,
+                Left = 200,
                 Top = 50,
                 Value = (decimal)initialMetric.Delay,
                 DecimalPlaces = 1, 
@@ -41,11 +41,13 @@ namespace GraphViewer.Forms
             {
                 Text = "Пропусная способность:",
                 Left = 20,
-                Top = 50
+                Top = 20,
+                Size = new(170, 20)
+
             };
-            txtBandWidth = new NumericUpDown
+            _txtBandWidth = new NumericUpDown
             {
-                Left = 120,
+                Left = 200,
                 Top = 20,
                 Value = (decimal)initialMetric.BandWidth,
                 DecimalPlaces = 1, 
@@ -54,24 +56,24 @@ namespace GraphViewer.Forms
                 Maximum = 1000     
             };
 
-            var btnOk = new Button
+            var bOk = new Button
             {
-                Text = "OK",
+                Text = "ОК",
                 Left = 120,
                 Top = 80,
                 DialogResult = DialogResult.OK
             };
             var btnCancel = new Button
             {
-                Text = "Cancel",
+                Text = "Отмена",
                 Left = 200,
                 Top = 80,
                 DialogResult = DialogResult.Cancel
             };
 
-            this.Controls.AddRange(new Control[] { lDelay, txtDelay, lBandWidth, txtBandWidth, btnOk, btnCancel });
+            this.Controls.AddRange([lDelay, _txtDelay, lBandWidth, _txtBandWidth, bOk, btnCancel]);
 
-            btnOk.Click += BtnOk_Click;
+            bOk.Click += BtnOk_Click;
 
             btnCancel.Click += (s, e) => this.Close();
 
@@ -82,7 +84,7 @@ namespace GraphViewer.Forms
         private void BtnOk_Click(object? sender, EventArgs e)
         {
 
-            Metric = new MetricF((float)txtDelay.Value, (float)txtBandWidth.Value);
+            Metric = new MetricF((float)_txtDelay.Value, (float)_txtBandWidth.Value);
             this.DialogResult = DialogResult.OK;
             this.Close();
 
@@ -93,6 +95,10 @@ namespace GraphViewer.Forms
             if (e.KeyCode == Keys.Escape)
             {
                 this.Close();
+            }
+            else if (e.KeyCode == Keys.Enter) 
+            {
+                BtnOk_Click(default, default);
             }
         }
     }

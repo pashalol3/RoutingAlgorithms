@@ -236,7 +236,9 @@ public class GraphVisualizerControl : Control
 
         string pathInfo = $"Метод поиска: {_routingMethodName[currentResult.RoutingMethod]}\n" +
                           $"Пропускная способность: {currentResult.TotalBandwidth:F1}\n" +
-                          $"Задержка: {currentResult.TotalDelay:F1}";
+                          $"Задержка: {currentResult.TotalDelay:F1}\n" +
+                          $"Путь: [{string.Join(' ', currentResult.Path.Select(s => s.NodeName))}]";
+            
 
         var infoSize = g.MeasureString(pathInfo, _nodeFont);
         var infoRect = new RectangleF(10, 10, infoSize.Width + 10, infoSize.Height + 10);

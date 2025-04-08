@@ -20,7 +20,6 @@ namespace RoutingAlgorithms.Models
         public float TotalDelay { get; init; }
         public float TotalBandwidth { get; init; }
 
-        public float Priority { get => TotalDelay + TotalBandwidth; }
         public RoutingMethod RoutingMethod { get; init; }
 
         public PathFindingResult(IEnumerable<Node> path, float totalBandwidth, float totalDelay, RoutingMethod routingMethod)
@@ -30,7 +29,7 @@ namespace RoutingAlgorithms.Models
             TotalBandwidth = totalBandwidth;
             RoutingMethod = routingMethod;
         }
-
+        public override string ToString() => string.Join(' ',Path.Select(s => s.NodeName));
         public bool Dominates(PathFindingResult other)
         {
             bool betterOrEqualBandwidth = TotalBandwidth <= other.TotalBandwidth;

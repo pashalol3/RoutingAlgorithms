@@ -1,11 +1,4 @@
 ﻿using RoutingAlgorithms.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-using System.Xml.Linq;
 
 namespace RoutingAlgorithms.Models
 {
@@ -17,7 +10,7 @@ namespace RoutingAlgorithms.Models
         public static MetricF One => new(1f, 1f);
         public static MetricF Zero => new(0f, 0f);
         public static MetricF RandomN => new(StaticRandom.FloatN, StaticRandom.FloatN);
-        public static MetricF Random => new(StaticRandom.FloatN * 10f, StaticRandom.FloatN * 10f);
+        public static MetricF Random => new(MathF.Round(StaticRandom.FloatN,1) * 10f, MathF.Round(StaticRandom.FloatN, 1));
         public MetricF(float delay, float bandwidth)
         {
             Delay = delay;
@@ -27,18 +20,7 @@ namespace RoutingAlgorithms.Models
 
         public float BandWidth { get; init; }
 
-        public override readonly string ToString()
-        {
-            if (false)
-            {
-                return $"[{Delay:F1};{BandWidth:F1}]";
-            }
-            else
-            {
-                return $"[{BandWidth:F1};{Delay:F1}]";
-            }
-
-        }
+        public override readonly string ToString() => $"[{BandWidth:F1};{Delay:F1}]";
 
         public override readonly bool Equals(object obj)
         {

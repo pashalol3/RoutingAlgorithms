@@ -26,8 +26,8 @@ namespace GraphViewer
 
         private Node? _start;
         private Node? _destination;
-        public int BandwidthLimit { get; set; } = 11;
-        public int DelayLimit { get; set; } = 11;
+        public float BandwidthLimit { get; set; } = 11;
+        public float DelayLimit { get; set; } = 11;
 
         public MainForm(Form helloForm)
         {
@@ -96,42 +96,48 @@ namespace GraphViewer
         private IList<PathFindingResult> TryToFindPath(Node start, Node dest)
         {
             IList<PathFindingResult> pathFindingResults = [];
-            if (start is not null && dest is not null)
+
+            if (start != null && dest != null)
             {
                 var dijkstraResult = Dijkstra.FindRoute(start, dest);
-                var SAMCRAResult = SAMCRA.FindRoute(start, dest, BandwidthLimit, DelayLimit);
+                var samcraResult = SAMCRA.FindRoute(start, dest, BandwidthLimit, DelayLimit);
 
                 var minDelayLimit = DelayLimit;
                 var minBandwidthLimit = BandwidthLimit;
-                do
-                {
-                    minDelayLimit--;
-                    SAMCRAResult = SAMCRA.FindRoute(start, dest, BandwidthLimit, minDelayLimit);
-                } while (!PathFindingResult.IsEmpty(SAMCRAResult));
-                minDelayLimit++;
-                do
-                {
-                    minBandwidthLimit--;
-                    SAMCRAResult = SAMCRA.FindRoute(start, dest, minBandwidthLimit, minDelayLimit);
-                } while (!PathFindingResult.IsEmpty(SAMCRAResult));
-                minBandwidthLimit++;
 
-                SAMCRAResult = SAMCRA.FindRoute(start, dest, minBandwidthLimit, minDelayLimit);
-                pathFindingResults.Clear();
-                pathFindingResults.Add(SAMCRAResult);
+                while (minDelayLimit > 0 && !PathFindingResult.IsEmpty(samcraResult))
+                {
+                    minDelayLimit -= 0.1f;
+                    samcraResult = SAMCRA.FindRoute(start, dest, BandwidthLimit, minDelayLimit);
+                }
+
+                minDelayLimit += 0.1f;
+                samcraResult = SAMCRA.FindRoute(start, dest, BandwidthLimit, DelayLimit);
+
+                while (minBandwidthLimit > 0 && !PathFindingResult.IsEmpty(samcraResult))
+                {
+                    minBandwidthLimit -= 0.1f;
+                    samcraResult = SAMCRA.FindRoute(start, dest, minBandwidthLimit, minDelayLimit);
+                }
+                minBandwidthLimit += 0.1f;
+                samcraResult = SAMCRA.FindRoute(start, dest, minBandwidthLimit, minDelayLimit);
+
+                pathFindingResults.Add(samcraResult);
                 pathFindingResults.Add(dijkstraResult);
-                return pathFindingResults;
             }
             else
             {
                 return Enumerable.Empty<PathFindingResult>().ToList();
             }
+
+            return pathFindingResults;
         }
+
 
         private void MainForm_Load(object? sender, EventArgs e)
         {
-            _nudBandwidth.Value = BandwidthLimit;
-            _nudDelay.Value = DelayLimit;
+            _nudBandwidth.Value = Convert.ToDecimal(BandwidthLimit);
+            _nudDelay.Value = Convert.ToDecimal(DelayLimit);
         }
 
         private void nudBandwidth_ValueChanged(object sender, EventArgs e)
