@@ -56,26 +56,29 @@ namespace GraphViewer.Forms
                 Maximum = 1000     
             };
 
-            var bOk = new Button
+            var _bOk = new Button
             {
                 Text = "ОК",
                 Left = 120,
                 Top = 80,
                 DialogResult = DialogResult.OK
             };
-            var btnCancel = new Button
+            var _bCancel = new Button
             {
                 Text = "Отмена",
                 Left = 200,
                 Top = 80,
                 DialogResult = DialogResult.Cancel
             };
+            _txtBandWidth.TabIndex = 0;
+            _txtDelay.TabIndex = 1;
+            _bOk.TabIndex = 2;
+            _bCancel.TabIndex = 3;
+            this.Controls.AddRange([lDelay, _txtDelay, lBandWidth, _txtBandWidth, _bOk, _bCancel]);
 
-            this.Controls.AddRange([lDelay, _txtDelay, lBandWidth, _txtBandWidth, bOk, btnCancel]);
+            _bOk.Click += BtnOk_Click;
 
-            bOk.Click += BtnOk_Click;
-
-            btnCancel.Click += (s, e) => this.Close();
+            _bCancel.Click += (s, e) => this.Close();
 
             this.KeyDown += MetricEditForm_KeyDown;
             this.KeyPreview = true;

@@ -2,7 +2,7 @@ using GraphViewer.Forms;
 using RoutingAlgorithms.Helpers;
 using RoutingAlgorithms.Models;
 using RoutingAlgorithms.Routing;
-using System.Text;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace GraphViewer
 {
@@ -22,6 +22,7 @@ namespace GraphViewer
             {6, GraphGenerator.Graph9()    },
         };
         private readonly Form _helloFormInstanse;
+        private CustomDialog _customDialog;
         private readonly GraphVisualizerControl _graphControl;
 
         private Node? _start;
@@ -101,29 +102,20 @@ namespace GraphViewer
             {
                 var dijkstraResult = Dijkstra.FindRoute(start, dest);
                 var samcraResult = SAMCRA.FindRoute(start, dest, BandwidthLimit, DelayLimit);
-
-                var minDelayLimit = DelayLimit;
-                var minBandwidthLimit = BandwidthLimit;
-
-                while (minDelayLimit > 0 && !PathFindingResult.IsEmpty(samcraResult))
-                {
-                    minDelayLimit -= 0.1f;
-                    samcraResult = SAMCRA.FindRoute(start, dest, BandwidthLimit, minDelayLimit);
-                }
-
-                minDelayLimit += 0.1f;
-                samcraResult = SAMCRA.FindRoute(start, dest, BandwidthLimit, DelayLimit);
-
-                while (minBandwidthLimit > 0 && !PathFindingResult.IsEmpty(samcraResult))
-                {
-                    minBandwidthLimit -= 0.1f;
-                    samcraResult = SAMCRA.FindRoute(start, dest, minBandwidthLimit, minDelayLimit);
-                }
-                minBandwidthLimit += 0.1f;
-                samcraResult = SAMCRA.FindRoute(start, dest, minBandwidthLimit, minDelayLimit);
-
                 pathFindingResults.Add(samcraResult);
                 pathFindingResults.Add(dijkstraResult);
+
+                if (!PathFindingResult.IsEmpty(samcraResult))
+                {
+                    if (_customDialog != null)
+                    {
+                        _customDialog.Close();
+                        _customDialog.Dispose();
+                    }
+      
+                    _customDialog = new (samcraResult.PathMetricInfo);
+                    _customDialog.Show();
+                }
             }
             else
             {

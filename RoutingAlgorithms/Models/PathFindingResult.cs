@@ -20,6 +20,7 @@ namespace RoutingAlgorithms.Models
         public float TotalDelay { get; init; }
         public float TotalBandwidth { get; init; }
 
+        public string PathMetricInfo { get; set; }
         public RoutingMethod RoutingMethod { get; init; }
 
         public PathFindingResult(IEnumerable<Node> path, float totalBandwidth, float totalDelay, RoutingMethod routingMethod)

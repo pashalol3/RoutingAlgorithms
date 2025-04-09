@@ -38,7 +38,7 @@ namespace RoutingAlgorithms.Models
 
         public bool Equals(Node other)
         {
-            return PositionN.Equals(other.PositionN) &&NodeName == other.NodeName;
+            return NodeName == other.NodeName;
         }
     }
 }

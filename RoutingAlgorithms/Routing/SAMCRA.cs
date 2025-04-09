@@ -1,4 +1,5 @@
 ﻿using RoutingAlgorithms.Models;
+using System.Text;
 
 
 namespace RoutingAlgorithms.Routing
@@ -39,13 +40,30 @@ namespace RoutingAlgorithms.Routing
                 // Проверка достижения цели
                 if (currentNode.Equals(destination))
                 {
-                    return new PathFindingResult(
+                    var sb = new StringBuilder();
+                    foreach (var item in queue.UnorderedItems)
+                    {
+                        sb.AppendLine($"Метрика пути [{item.Element}] с учетом ограничений = {item.Priority}    [{item.Element.TotalBandwidth}:{item.Element.TotalDelay}]");
+                    }
+
+                    var finalPriority = CalculatePriority(currentState, routeMaxBandwidth, routeMaxDelay);
+                    sb.AppendLine($"Метрика пути [{currentState}] с учетом ограничений = {finalPriority}    [{currentState.TotalBandwidth}:{currentState.TotalDelay}]");
+                    sb.AppendLine();
+                    sb.AppendLine($"Выбираем путь [{currentState}], так как он имеет минимальные значения метрики с учетом ограничений");
+
+                    var res = new PathFindingResult(
                         currentState.Path,
                         currentState.TotalBandwidth,
                         currentState.TotalDelay,
                         RoutingMethod.SAMCRA
-                    );
+                    )
+                    {
+                        PathMetricInfo = sb.ToString()
+                    };
+
+                    return res;
                 }
+
 
                 // Перебор всех соседей текущего узла
                 foreach (var neighborEdge in currentNode.Neighbors)
@@ -77,10 +95,8 @@ namespace RoutingAlgorithms.Routing
                     states.Add(newState);
 
                     // Добавление в очередь с приоритетом
-                    queue.Enqueue(
-                        newState,
-                        CalculatePriority(newState, routeMaxBandwidth, routeMaxDelay)
-                    );
+                    var priority = CalculatePriority(newState, routeMaxBandwidth, routeMaxDelay);
+                    queue.Enqueue(newState, priority);
                 }
             }
 
@@ -91,7 +107,7 @@ namespace RoutingAlgorithms.Routing
         private static float CalculatePriority(PathState state, float maxBandwidth, float maxTime)
         {
             // Приоритет - максимальная нормализованная метрика
-            return MathF.Max(state.TotalBandwidth / maxBandwidth , state.TotalDelay / maxTime);
+            return MathF.Max(state.TotalBandwidth / maxBandwidth, state.TotalDelay / maxTime); ;
         }
 
         private static bool IsDominated(
@@ -131,6 +147,8 @@ namespace RoutingAlgorithms.Routing
             public List<Node> Path { get; init; } = path;
             public float TotalBandwidth { get; init; } = totalCost;
             public float TotalDelay { get; init; } = totalTime;
+
+            public override string ToString() => string.Join(' ', Path.Select(s => s.NodeName));
         }
     }
 }

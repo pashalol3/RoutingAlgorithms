@@ -85,7 +85,7 @@ public class GraphVisualizerControl : Control
     private static readonly Dictionary<RoutingMethod, string> _routingMethodName = new()
         {
             { RoutingMethod.SAMCRA, "Предлагаемый алгоритм" },
-            { RoutingMethod.Dijkstra, "Алгоритм дейкстры" },
+            { RoutingMethod.Dijkstra, "Алгоритм Дейкстры" },
             { RoutingMethod.BellmanFord, "BellmanFord" },
             { RoutingMethod.Invalid, "Invalid"},
         };

@@ -10,7 +10,9 @@ namespace RoutingAlgorithms.Models
         public static MetricF One => new(1f, 1f);
         public static MetricF Zero => new(0f, 0f);
         public static MetricF RandomN => new(StaticRandom.FloatN, StaticRandom.FloatN);
-        public static MetricF Random => new(MathF.Round(StaticRandom.FloatN,1) * 10f, MathF.Round(StaticRandom.FloatN, 1));
+        public static MetricF Random => new(
+            MathF.Round(StaticRandom.FloatNMaxMin(0.1f, 1f), 2) * 10f,
+            MathF.Round(StaticRandom.FloatNMaxMin(0.1f, 1f), 2) * 10f);
         public MetricF(float delay, float bandwidth)
         {
             Delay = delay;

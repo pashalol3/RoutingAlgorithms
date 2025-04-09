@@ -103,10 +103,11 @@ namespace RoutingAlgorithms.Helpers
 
             for (int i = 0; i < width; i++)
             {
-                for (int j = i + 1; j < width; j++) 
+                for (int j = i + 1; j < width; j++) // Начинаем с j = i + 1
                 {
                     if (matrix[i, j] == 1)
                     {
+                        // Генерируем метрику ОДИН раз для обоих направлений
                         var metric = MetricF.Random;
                         nodes[i].Neighbors[nodes[j]] = metric;
                         nodes[j].Neighbors[nodes[i]] = metric;
@@ -119,7 +120,7 @@ namespace RoutingAlgorithms.Helpers
 
         public static List<Node> DistributeCoordinates(List<Node> nodes)
         {
-            int numPairs = (nodes.Count + 1) / 2; 
+            int numPairs = (nodes.Count + 1) / 2; // Округляем вверх, чтобы учесть нечётные случаи
 
             for (int i = 0; i < nodes.Count; i++)
             {
